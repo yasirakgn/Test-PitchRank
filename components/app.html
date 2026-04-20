@@ -1,0 +1,312 @@
+<main class="app" id="app">
+  <header class="hdr">
+    <div class="hdr-left">
+      <div class="hdr-sub">Halı Saha Pro</div>
+      <div class="hdr-title">Yönetim &amp; İstatistik</div>
+    </div>
+    <button class="dark-btn" id="darkBtn" onclick="toggleDark()" type="button">☀️</button>
+  </header>
+
+  <section id="screen-puanla" class="screen active" aria-label="Puanla">
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <div class="slabel">Kimlik Seçimi</div>
+          <div class="stitle" style="margin-bottom:0;">Sen kimsin?</div>
+        </div>
+        <button id="changeIdentityBtn" class="abtn" style="margin:0;display:none;font-size:11px;padding:6px 10px;" onclick="resetIdentity()" type="button">Değiştir</button>
+      </div>
+      <div style="margin-top: 16px;">
+        <select id="raterSelect" onchange="onRaterChange()">
+          <option value="">— Adınızı Seçin —</option>
+        </select>
+      </div>
+      <div id="identityLockedMsg" style="display:none; font-size:12px; color:var(--text3); margin-top:10px; font-weight:500;">
+        <span style="color:var(--green)">✓</span> Kimliğiniz cihaza kilitlendi.
+      </div>
+    </div>
+
+    <div id="progressWrap" class="prog-wrap" style="display:none;">
+      <div class="prog-top"><span>Değerlendirme İlerlemesi</span><span class="prog-count" id="progCount">0/0</span></div>
+      <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+    </div>
+
+    <div id="ratingCards" style="display:none;"></div>
+
+    <div class="submit-area" id="submitArea" style="display:none;">
+      <button class="sub-btn" id="submitBtn" onclick="submitRatings()" disabled type="button">Puanları Gönder</button>
+    </div>
+  </section>
+
+  <section id="screen-siralama" class="screen" aria-label="Sıralama">
+    <div id="statsInfoBand" class="card" style="display:none; margin-bottom:14px; padding:12px 16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <div id="statsInfoText" style="font-size:13px;font-weight:700;color:var(--text2);"></div>
+        <div id="statsInfoWeekBadge" style="font-size:12px;font-weight:800;padding:6px 14px;border-radius:20px;background:var(--gd);color:var(--green);border:1px solid #10b98130;white-space:nowrap;"></div>
+      </div>
+    </div>
+    <div class="sub-nav">
+      <button class="sub-nb active" onclick="setRankTab('genel',this)" type="button">🏆 Genel</button>
+      <button class="sub-nb" onclick="setRankTab('defans',this)" type="button">🛡️ Defans</button>
+      <button class="sub-nb" onclick="setRankTab('orta',this)" type="button">⚙️ Orta</button>
+      <button class="sub-nb" onclick="setRankTab('forvet',this)" type="button">⚡ Forvet</button>
+    </div>
+    <div id="fifaGrid" class="fg" style="margin-bottom:12px;"></div>
+    <div id="noDataSonuc" class="no-data" style="display:none">Henüz puan girilmedi.</div>
+  </section>
+
+  <section id="screen-istatistik" class="screen" aria-label="İstatistik">
+    <div class="sub-nav">
+      <button class="sub-nb active" onclick="setStatScreen('hafta',this)" type="button">📊 Hafta</button>
+      <button class="sub-nb" onclick="setStatScreen('trend',this)" type="button">📈 Trend</button>
+      <button class="sub-nb" onclick="setStatScreen('karsi',this)" type="button">⚔️ Karşılaştır</button>
+      <button class="sub-nb" onclick="setStatScreen('sezon',this)" type="button">🏅 Sezon</button>
+      <button class="sub-nb" onclick="setStatScreen('katilim',this)" type="button">📅 Katılım</button>
+      <button class="sub-nb" onclick="setStatScreen('maclar',this)" type="button">🏟️ Maçlar</button>
+    </div>
+    <div id="stat-hafta" class="sub-screen active">
+      <div id="weekSelectorWrap" style="margin-bottom:14px;"></div>
+      <div id="weekContent"></div>
+      <div id="noDataHafta" class="no-data" style="display:none">Henüz puan girilmedi.</div>
+    </div>
+    <div id="stat-trend" class="sub-screen">
+      <div class="card">
+        <div class="slabel">Gelişim Eğrisi</div>
+        <div class="stitle">Performans Trendi</div>
+        <select id="trendSelect" onchange="renderTrend()"><option value="">— Oyuncu Seç —</option></select>
+      </div>
+      <div id="trendContent"></div>
+    </div>
+    <div id="stat-karsi" class="sub-screen">
+      <div class="card">
+        <div class="slabel">Analiz</div>
+        <div class="stitle">Oyuncu Karşılaştırma</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <select id="cmpA" onchange="renderComparison()"><option value="">— Oyuncu 1 —</option></select>
+          <select id="cmpB" onchange="renderComparison()"><option value="">— Oyuncu 2 —</option></select>
+        </div>
+      </div>
+      <div id="cmpContent"></div>
+    </div>
+    <div id="stat-sezon" class="sub-screen">
+      <div class="sec-title">Sezon Özeti &amp; Ödüller</div>
+      <div id="sezonContent"><div class="no-data"><span class="spin"></span>Yükleniyor...</div></div>
+    </div>
+    <div id="stat-katilim" class="sub-screen">
+      <div class="sec-title">Devamlılık Raporu</div>
+      <div id="attendContent"><div class="no-data"><span class="spin"></span>Yükleniyor...</div></div>
+    </div>
+    <div id="stat-maclar" class="sub-screen">
+      <div class="sec-title">Geçmiş Karşılaşmalar</div>
+      <div id="publicMatchHistory"><div class="no-data"><span class="spin"></span>Yükleniyor...</div></div>
+    </div>
+  </section>
+
+  <section id="screen-takim" class="screen" aria-label="Takım Kur">
+    <div class="sec-title">Akıllı Taktik Tahtası</div>
+    <div class="card">
+      <div class="slabel" style="margin-bottom:12px">Kadro Seçimi</div>
+      <div id="todayPlayers" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px"></div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <button class="abtn" style="margin:0" onclick="selectAllPlayers()" type="button">Tümünü Seç</button>
+        <button class="abtn" style="margin:0" onclick="clearAllPlayers()" type="button">Temizle</button>
+        <button class="abtn pri" style="margin:0;grid-column:span 2;padding:14px;font-size:15px;" onclick="buildTeams()" type="button">⚡ Dengeli Takım Kur</button>
+        <button class="abtn" style="margin:0;grid-column:span 2;padding:14px;font-size:15px;" onclick="shuffleTeams()" type="button">🔀 Rastgele Karıştır</button>
+      </div>
+    </div>
+    <div id="balanceInfo" style="margin-bottom:12px"></div>
+    <div id="teamResult"></div>
+    <div id="noDataTakim" class="no-data" style="display:none">Diziliş için en az 4 oyuncu seçmelisiniz.</div>
+  </section>
+
+  <section id="screen-admin" class="screen" aria-label="Yönetici">
+    <div class="card" style="text-align:center; background:var(--bg2); border:none;">
+      <div style="font-size:36px; margin-bottom:12px;">🛡️</div>
+      <div class="stitle" style="color:var(--green); font-size:20px;">Yönetici Paneli</div>
+      <div style="font-size:13px; color:var(--text2); margin-bottom:20px; line-height:1.4;">Maç sonuçlarını girmek ve kadroyu yönetmek için yetkili alandasınız.</div>
+      <button class="abtn" style="background:var(--bg3);" onclick="logoutAdmin()" type="button">Güvenli Çıkış</button>
+    </div>
+
+    <div class="sub-nav">
+      <button class="sub-nb active" onclick="setAdminTab('mac',this)" type="button">⚽ Skor</button>
+      <button class="sub-nb" onclick="setAdminTab('bugun',this)" type="button">📋 Bugün Gelenler</button>
+      <button class="sub-nb" onclick="setAdminTab('hakem',this)" type="button">🟡 Hakem</button>
+      <button class="sub-nb" onclick="setAdminTab('yayin',this)" type="button">🎬 Yayın</button>
+      <button class="sub-nb" onclick="setAdminTab('hafta',this)" type="button">📅 Hafta</button>
+      <button class="sub-nb" onclick="setAdminTab('ayarlar',this)" type="button">⚙️ Oyuncular</button>
+    </div>
+
+    <div id="admin-bugun" class="sub-screen">
+      <div class="card">
+        <div class="slabel">Katılım</div>
+        <div class="stitle" style="margin-bottom:4px;">📋 Bugün Gelenler</div>
+        <div style="font-size:13px;color:var(--text3);margin-bottom:16px;line-height:1.5;">
+          Bu haftaki maça katılan oyuncuları işaretle. Sadece bu oyuncular oylamada görünür ve oy kullanabilir.
+        </div>
+        <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:12px;">
+          Hafta: <b id="bugunWeekLabel" style="color:var(--green)"></b>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+          <button class="abtn" style="margin:0;font-size:12px;padding:8px 14px;" onclick="bugunSelectAll()" type="button">✅ Tümünü Seç</button>
+          <button class="abtn" style="margin:0;font-size:12px;padding:8px 14px;" onclick="bugunClearAll()" type="button">❌ Temizle</button>
+        </div>
+        <div id="bugunPlayerList" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;min-height:40px;">
+          <span class="spin"></span>
+        </div>
+        <button class="sub-btn" id="bugunSaveBtn" onclick="saveBugunGelenler()" type="button">💾 Kaydet</button>
+        <div id="bugunSaveMsg" style="font-size:13px;color:var(--green);margin-top:10px;text-align:center;font-weight:700;display:none;"></div>
+      </div>
+    </div>
+
+    <div id="admin-hakem" class="sub-screen">
+      <div class="card">
+        <div class="slabel">Bu Hafta</div>
+        <div class="stitle" style="margin-bottom:4px;">🟡 Hakem Ata</div>
+        <div style="font-size:13px;color:var(--text3);margin-bottom:16px;line-height:1.5;">
+          Hakem olarak seçilen oyuncu oy kullanabilir, ancak kendisine oy verilemez. Hakem seçilmezse herkes birbirini puanlayabilir.
+        </div>
+        <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:12px;">
+          Hafta: <b id="hakemWeekLabel" style="color:var(--green)"></b>
+        </div>
+        <div id="hakemCurrentInfo" style="display:none;font-size:13px;font-weight:700;background:var(--gd);color:var(--green);border:1px solid #10b98130;padding:10px 14px;border-radius:14px;margin-bottom:16px;"></div>
+        <div style="margin-bottom:16px;">
+          <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:10px;">Hakem Seç:</div>
+          <div id="hakemPlayerList" style="display:flex;flex-wrap:wrap;gap:8px;min-height:40px;">
+            <span class="spin"></span>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="sub-btn" id="hakemSaveBtn" onclick="saveHakemToSheet()" style="flex:1;" type="button">💾 Kaydet</button>
+          <button class="abtn" onclick="clearHakem()" style="margin:0;padding:14px 16px;font-weight:700;color:#ff3b30;border-color:#ff3b30;background:rgba(255,59,48,0.05);" type="button">✕ Kaldır</button>
+        </div>
+        <div id="hakemSaveMsg" style="font-size:13px;color:var(--green);margin-top:10px;text-align:center;font-weight:700;display:none;"></div>
+      </div>
+    </div>
+
+    <div id="admin-mac" class="sub-screen active">
+      <div class="card">
+        <div class="slabel">Müsabaka</div>
+        <div class="stitle" style="margin-bottom:16px">Maç Skoru</div>
+        <div class="match-scoreboard">
+          <div class="match-team">
+            <div class="match-team-label">⚪ Beyaz Takım</div>
+            <input type="number" class="sinput" id="score1" min="0" max="99" value="0">
+          </div>
+          <div class="match-vs">VS</div>
+          <div class="match-team">
+            <div class="match-team-label">🔵 Renkli Takım</div>
+            <input type="number" class="sinput" id="score2" min="0" max="99" value="0">
+          </div>
+        </div>
+        <div class="match-meta">
+          <div class="match-meta-item">
+            <div class="slabel">Hafta Kodu</div>
+            <input type="text" id="matchWeek">
+          </div>
+          <div class="match-meta-item">
+            <div class="slabel">Maç Notu</div>
+            <input type="text" id="matchNote" placeholder="Örn: Yağmurlu...">
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="slabel">Bireysel Performans</div>
+        <div class="stitle" style="margin-bottom:16px">Gol &amp; Asist Tablosu</div>
+        <div class="goal-table-header">
+          <span class="goal-col-name">Oyuncu</span>
+          <span class="goal-col-stat">⚽ Gol</span>
+          <span class="goal-col-stat">🅰 Asist</span>
+        </div>
+        <div id="goalInputs"></div>
+      </div>
+      <button class="sub-btn" style="width:100%;margin-bottom:24px;" onclick="saveMatch()" type="button">Veritabanına Kaydet</button>
+      <div class="card">
+        <div class="sec-title">Geçmiş Karşılaşmalar</div>
+        <div id="matchHistory"><div class="no-data"><span class="spin"></span>Yükleniyor...</div></div>
+      </div>
+    </div>
+
+    <div id="admin-yayin" class="sub-screen">
+      <div class="card">
+        <div class="slabel">Yayın Yönetimi</div>
+        <div class="stitle" style="margin-bottom:4px;">🎬 YouTube Yayın Ekle</div>
+        <div style="font-size:13px;color:var(--text3);margin-bottom:20px;">Haftalık maç yayınının YouTube linkini girin.</div>
+        <div style="margin-bottom:14px;">
+          <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:8px;">📅 Hafta</div>
+          <input type="text" id="adminVideoWeek" placeholder="Örn: 2026-H15" style="background:var(--bg2);">
+          <div style="font-size:11px;color:var(--text3);margin-top:6px;">Mevcut hafta: <b id="adminVideoWeekHint" style="color:var(--green);"></b></div>
+        </div>
+        <div style="margin-bottom:14px;">
+          <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:8px;">🔗 YouTube Linki</div>
+          <input type="text" id="adminVideoUrl" placeholder="YouTube linki veya embed kodu" style="background:var(--bg2);">
+        </div>
+        <div style="margin-bottom:20px;">
+          <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:8px;">📝 Başlık (opsiyonel)</div>
+          <input type="text" id="adminVideoTitle" placeholder="Örn: 2026-H15 Maç Yayını" style="background:var(--bg2);">
+        </div>
+        <button id="adminSaveVideoBtn" class="sub-btn" onclick="adminSaveVideo()" type="button">💾 Kaydet</button>
+      </div>
+      <div class="card" style="margin-top:4px;">
+        <div class="slabel">Kayıtlı Yayınlar</div>
+        <div class="stitle" style="margin-bottom:12px;">📺 Mevcut Yayınlar</div>
+        <div id="adminVideoList"><div class="no-data"><span class="spin"></span>Yükleniyor...</div></div>
+        <button class="abtn" onclick="loadAdminVideos()" style="margin-top:12px;width:100%;text-align:center;" type="button">🔄 Yenile</button>
+      </div>
+    </div>
+
+    <div id="admin-hafta" class="sub-screen">
+      <div class="card">
+        <div class="slabel">Hafta Yönetimi</div>
+        <div class="stitle" style="margin-bottom:4px;">📅 Aktif Hafta</div>
+        <div style="font-size:13px;color:var(--text3);margin-bottom:20px;">Sistemin kullanacağı haftayı manuel olarak ayarlayın. Otomatik artma devre dışı.</div>
+        <div style="margin-bottom:14px;">
+          <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:8px;">Mevcut Hafta</div>
+          <div style="font-size:28px;font-weight:900;color:var(--green);margin-bottom:12px;" id="currentWeekDisplay">Yükleniyor...</div>
+        </div>
+        <div style="margin-bottom:14px;">
+          <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:8px;">Yeni Hafta Ayarla</div>
+          <input type="text" id="newWeekInput" placeholder="Örn: 2026-H16" style="background:var(--bg2);">
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="sub-btn" style="flex:1;" onclick="saveCurrentWeek()" type="button">💾 Kaydet</button>
+          <button class="abtn" style="margin:0;" onclick="resetWeekToAuto()" type="button">🔄 Otomatik (Geçici)</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="admin-ayarlar" class="sub-screen">
+      <div class="card">
+        <div class="slabel">Veritabanı</div>
+        <div class="stitle">Oyuncu Listesi</div>
+        <div id="playerList"></div>
+        <div style="display:flex;gap:12px;margin-top:20px;align-items:center;background:var(--bg3);padding:12px;border-radius:var(--r);">
+          <input type="text" id="newPlayerName" placeholder="Yeni oyuncu adı..." style="flex:1;background:var(--bg2);border:none;">
+          <button class="abtn pri" onclick="addPlayer()" style="margin:0;white-space:nowrap" type="button">+ Ekle</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="screen-yayin" class="screen" aria-label="Yayınlar">
+    <div class="card" style="margin-bottom:12px;">
+      <div class="slabel">Canlı Arşiv</div>
+      <div class="stitle" style="margin-bottom:4px;">🎬 Maç Yayınları</div>
+      <div style="font-size:13px;color:var(--text3);font-weight:500;">Haftalık maç yayınlarını izleyin</div>
+    </div>
+    <div id="vWeekTabs" class="video-week-tabs"></div>
+    <div class="card" style="padding:0;overflow:hidden;margin-bottom:12px;" id="vPlayerCard">
+      <div class="yt-wrap" id="ytWrap">
+        <div class="yt-placeholder" id="ytPlaceholder">
+          <div class="yt-placeholder-icon">📺</div>
+          <div>Hafta seçin</div>
+        </div>
+      </div>
+      <div id="vVideoMeta" style="padding:12px 16px;display:none;">
+        <div id="vVideoTitle" style="font-size:14px;font-weight:800;margin-bottom:4px;"></div>
+        <div id="vVideoWeek" style="font-size:12px;color:var(--text3);font-weight:600;"></div>
+      </div>
+    </div>
+    <div id="vNoData" class="no-data" style="display:none;">📺 Henüz yayın eklenmedi.</div>
+    <div id="vAllVideos" style="margin-top:4px;"></div>
+  </section>
+</main>

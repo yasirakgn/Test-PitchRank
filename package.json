@@ -1,0 +1,12 @@
+{
+  "name": "halisaha-pro",
+  "version": "1.0.0",
+  "description": "Halı Saha Değerlendirme Uygulaması",
+  "scripts": {
+    "dev": "npx serve .",
+    "build": "echo \"Static site, no build needed\""
+  },
+  "keywords": ["halisaha", "rating", "football"],
+  "author": "",
+  "license": "MIT"
+}

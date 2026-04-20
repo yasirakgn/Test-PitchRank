@@ -1,0 +1,43 @@
+<div class="mbg" id="modalBg" onclick="closeModal(event)">
+  <div id="profileModal" style="background:var(--bg2);border-radius:28px;max-width:400px;width:94%;max-height:90vh;overflow-y:auto;overflow-x:hidden;position:relative;box-shadow:0 32px 64px rgba(0,0,0,0.4);animation:popIn 0.3s cubic-bezier(0.16,1,0.3,1);">
+    <div id="profileHero" style="position:relative;min-height:180px;overflow:hidden;border-radius:28px 28px 0 0;"></div>
+    <div id="modalBody" style="padding:0 18px 24px;"></div>
+    <div style="position:absolute;top:14px;right:14px;display:flex;gap:8px;z-index:20;">
+      <button class="xcls" style="background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);color:#fff;border:1px solid rgba(255,255,255,0.2);font-size:13px;width:34px;height:34px;" onclick="shareProfile()" title="Paylaş" type="button">📤</button>
+      <button class="xcls" style="background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);color:#fff;border:1px solid rgba(255,255,255,0.2);font-size:18px;width:34px;height:34px;" onclick="closeModal(null,true)" type="button">×</button>
+    </div>
+  </div>
+</div>
+
+<div class="mbg" id="pinBg">
+  <div class="modal" style="max-width:300px;padding:32px 20px;text-align:center;">
+    <div class="mtitle" style="margin-bottom:10px;font-size:20px;">Yetkili Girişi</div>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:24px;">İşlem yapmak için PIN kodunu girin.</div>
+    <input type="password" id="adminPinInput" placeholder="••••" maxlength="10" style="text-align:center;font-size:32px;letter-spacing:12px;margin-bottom:12px;font-weight:800;background:var(--bg3);border:none;" onkeydown="if(event.key==='Enter') checkPin()">
+    <div id="pinError" style="color:#ff3b30;font-size:13px;font-weight:600;min-height:20px;margin-bottom:16px;text-align:center;"></div>
+    <div style="display:flex;justify-content:center;gap:10px;">
+      <button class="abtn" style="padding:12px 20px;font-size:14px;" onclick="document.getElementById('pinBg').classList.remove('open')" type="button">İptal</button>
+      <button class="abtn pri" style="padding:12px 20px;font-size:14px;" onclick="checkPin()" type="button">Doğrula</button>
+    </div>
+  </div>
+</div>
+
+<div id="successPopup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);">
+  <div style="background:var(--bg2);border-radius:32px;padding:40px 20px;max-width:300px;width:90%;text-align:center;box-shadow:var(--sh2);animation:popIn 0.4s cubic-bezier(0.16,1,0.3,1);">
+    <div style="font-size:64px;margin-bottom:16px;filter:drop-shadow(0 8px 12px rgba(52,199,89,0.4));">✅</div>
+    <div style="font-size:24px;font-weight:800;margin-bottom:12px;letter-spacing:-0.5px;">Başarılı!</div>
+    <div style="font-size:14px;color:var(--text2);margin-bottom:32px;line-height:1.5;">Değerlendirmeleriniz güvenli bir şekilde sisteme işlendi.</div>
+    <button onclick="closeSuccessPopup()" style="background:var(--text);color:var(--bg);border:none;border-radius:16px;padding:16px 24px;font-size:16px;font-weight:700;cursor:pointer;width:100%;font-family:inherit;" type="button">Sıralamayı Gör</button>
+  </div>
+</div>
+
+<div class="mbg" id="confirmBg">
+  <div class="modal" style="max-width:320px;padding:24px;">
+    <div class="mtitle" style="margin-bottom:12px;font-size:18px;">Onay Gerekiyor</div>
+    <div id="confirmMsg" style="color:var(--text2);font-size:14px;line-height:1.5;margin-bottom:24px;"></div>
+    <div style="display:flex;gap:10px;">
+      <button class="abtn" style="padding:12px 16px;font-size:13px;" onclick="closeConfirm()" type="button">İptal</button>
+      <button class="abtn pri" id="confirmBtn" style="margin:0;background:#ff3b30;border:none;color:white;padding:12px 16px;font-size:13px;" type="button">Evet, Onayla</button>
+    </div>
+  </div>
+</div>
