@@ -1,4 +1,4 @@
-var SHEET_ID = '1V3yh8AH2GG55O9zkgTR_2yI6-J17c1x-OgN7TYC5N4M';
+var SHEET_ID = '1olxoMoQj1qoynLU756se3qPXAwFKUTE3f7nVxkyyGWE';
 
 var RATE_LIMIT_MAX       = 5;
 var RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
@@ -197,7 +197,7 @@ function saveRating(params) {
   var ss    = SpreadsheetApp.openById(SHEET_ID);
   var sheet = ss.getSheetByName('Puanlar');
   if (!sheet) { sheet = ss.insertSheet('Puanlar'); sheet.appendRow(['Tarih','Hafta','Puanlayan','Oyuncu','Pas','Sut','Dribling','Savunma','Hiz Kondisyon','Fizik','Takim Oyunu']); }
-  var scores = JSON.parse(decodeURIComponent(params.scores));
+  var scores = JSON.parse(params.scores);
   var week = params.week, rater = params.rater, now = new Date().toLocaleString('tr-TR');
   var data = sheet.getDataRange().getValues();
 
@@ -418,8 +418,8 @@ function saveAttendance(params) {
   var ss = SpreadsheetApp.openById(SHEET_ID);
   var sheet = getOrCreateKatilimSheet(ss);
   var now = new Date().toLocaleString('tr-TR'), week = params.week || '';
-  var presentRaw = params.present ? decodeURIComponent(params.present) : '';
-  var absentRaw  = params.absent  ? decodeURIComponent(params.absent)  : '';
+  var presentRaw = params.present || '';
+  var absentRaw  = params.absent  || '';
   presentRaw.split(',').filter(function(s){return s.trim();}).forEach(function(p){setAttendance(sheet,now,week,p.trim(),1);});
   absentRaw.split(',').filter(function(s){return s.trim();}).forEach(function(p){setAttendance(sheet,now,week,p.trim(),0);});
   return json({ success: true });

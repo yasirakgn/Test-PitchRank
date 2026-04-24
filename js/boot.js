@@ -14,15 +14,6 @@ async function loadIncludes() {
 document.addEventListener('DOMContentLoaded', async () => {
   try {
     await loadIncludes();
-    const activeKey = (document.body && document.body.dataset && document.body.dataset.page) ? document.body.dataset.page : '';
-    if (activeKey) {
-      document.querySelectorAll('.bottom-nav .bnav-item').forEach((el) => {
-        const href = el.getAttribute && el.getAttribute('href');
-        if (!href) return;
-        const key = href.replace('.html', '');
-        if (key === activeKey) el.classList.add('active');
-      });
-    }
     if (typeof window.initApp === 'function') window.initApp();
   } catch (e) {
     const msg = document.createElement('pre');

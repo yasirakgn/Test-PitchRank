@@ -1,10 +1,19 @@
 <main class="app" id="app">
+  <div id="bgTeamName" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); font-size: 15vw; font-weight: 900; color: var(--text); opacity: 0.03; pointer-events: none; z-index: -1; white-space: nowrap; text-transform: uppercase; letter-spacing: 10px;"></div>
   <header class="hdr">
     <div class="hdr-left">
-      <div class="hdr-sub">Halı Saha Pro</div>
-      <div class="hdr-title">Yönetim &amp; İstatistik</div>
+      <img id="teamLogo" src="assets/images/icon-192.png" alt="PitchRank Logo" style="width: 32px; height: 32px; border-radius: 8px; box-shadow: var(--sh);">
+      <div>
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <span id="teamBadge" style="font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 20px; border: 1px solid; letter-spacing: 0.3px;"></span>
+          <button onclick="resetTeam()" style="background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; padding: 3px 8px; font-size: 10px; font-weight: 700; color: var(--text2); cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px;">Değiştir</button>
+        </div>
+        <div id="teamName" class="hdr-title" style="letter-spacing: 0.5px; font-size: 18px; font-weight: 900; margin-top: 2px;">PitchRank</div>
+      </div>
     </div>
-    <button class="dark-btn" id="darkBtn" onclick="toggleDark()" type="button">☀️</button>
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <button class="dark-btn" id="darkBtn" onclick="toggleDark()" type="button" style="margin: 0;">☀️</button>
+    </div>
   </header>
 
   <section id="screen-puanla" class="screen active" aria-label="Puanla">
